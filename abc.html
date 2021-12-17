@@ -12,8 +12,23 @@
 
             </div>
             <div class="form-field">
-                <input placeholder="genre" style="border-left: #333342;border-radius: 3px;" type="text" name="genre" list="cityname">
+                <input placeholder="genre1" style="border-left: #333342;border-radius: 3px;" type="text" name="genre1" list="cityname">
                 <datalist id="cityname">
+					</datalist>
+            </div>
+            <div class="form-field">
+                <input placeholder="genre2" style="border-left: #333342;border-radius: 3px;" type="text" name="genre2" list="cityname">
+                <datalist id="cityname">
+					</datalist>
+            </div>
+            <div class="form-field">
+                <input placeholder="genre3" style="border-left: #333342;border-radius: 3px;" type="text" name="genre3" list="cityname">
+                <datalist id="cityname">
+					</datalist>
+            </div>
+            <div class="form-field">
+                <input placeholder="lyrics" style="border-left: #333342;border-radius: 3px;" type="text" name="lyrics" list="lyrics">
+                <datalist id="lyrics">
 					</datalist>
             </div>
 
@@ -68,16 +83,26 @@
         'swedish', 'synth-pop', 'tango', 'techno', 'trance', 'trip-hop',
         'turkish', 'work-out', 'world-music'
     ]
+    var lyrics = ['Y','N']
     genreOpt = document.getElementById("cityname");
     for (var i = 0; i < genre.length; i++) {
         genreOpt.innerHTML += '<option value="' + genre[i] + '">'
     }
-    var data = {{output | safe}};
-    genreOpt2 = document.getElementById("cityname");
-    for (var i = 0; i < genre.length; i++) {
-        genreOpt2.innerHTML += '<option value="' + genre[i] + '">'
+
+    lyricsOpt = document.getElementById("lyrics");
+    for (var j = 0; j < lyrics.length; j++) {
+        lyricsOpt.innerHTML += '<option value="' + lyrics[j] + '">'
     }
+
     var data = {{output | safe}};
+
+
+    // var data = {{output | safe}};
+    // genreOpt2 = document.getElementById("cityname");
+    // for (var i = 0; i < genre.length; i++) {
+    //     genreOpt2.innerHTML += '<option value="' + genre[i] + '">'
+    // }
+    // var data = {{output | safe}};
 
     lis = document.getElementById("List");
     if (data) {

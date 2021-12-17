@@ -26,16 +26,20 @@ from sklearn.metrics.pairwise import cosine_similarity, linear_kernel
 @app.route("/")
 def main():
     return "Welcome!"
+    
 @app.route("/track_id", methods=['GET','POST'])
 def track_id():
     output=None
     if request.method == 'POST':
         track_id=request.form['track_id']
-        genre=request.form['genre']
+        genre=request.form['genre1']
+        genre2=request.form['genre2']
+        genre3=request.form['genre3']
+        lyric=request.form['lyrics']
         #Load data
         df = pd.read_csv("./valence_arousal_dataset.csv")
 
-        #Create mood vector
+        # #Create mood vector
         df["mood_vec"] = df[["valence", "energy"]].values.tolist()
 
         sp = authorization.authorize()
@@ -66,12 +70,20 @@ def track_id():
     
             # Return n recommendations
             return ref_df_sorted.iloc[:n_recs]
-        rec = recommend(track_id=track_id, ref_df= df, sp= sp, n_recs=5)
-        if(genre):
-            rec= df[df['genre']==genre]
-        output= makeObject(rec)
+        if track_id in df['id'].unique():
+            rec = recommend(track_id=track_id, ref_df= df, sp= sp, n_recs=20)
+        else:
+            rec = pd.DataFrame(np.nan)
+
+        list_music = rec.copy()
+        if genres1 in df['genre'].unique():
+            list_music = list_music[list_music['genre'].isin([genre, genre2, genre3])]
+        if lyric == 'Y' or lyric == 'N':
+            list_music = list_music[list_music['lyric'].isin([lyric])]
+        output= makeObject(list_music)
 
     return render_template('abc.html',output=output)
+
 @app.route("/popularity_recomendation", methods=['GET','POST'])
 def popularity_recomendation():
     output=None
