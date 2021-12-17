@@ -1,3 +1,4 @@
+from search_engine import search_engine
 from flask import Flask,render_template,request,redirect,url_for,session
 app = Flask(__name__,template_folder='')
 import requests
@@ -23,22 +24,34 @@ from sklearn.feature_extraction.text import CountVectorizer,TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity, linear_kernel
 
 
-@app.route("/")
-def main():
-    return "Welcome!"
-@app.route("/track_id", methods=['GET','POST'])
+
+
+# @app.route("/")
+# def main():
+#     return "Welcome!"
+    
+@app.route("/", methods=['GET','POST'])
 def track_id():
     output=None
+    track_name_result = ""
     if request.method == 'POST':
-        track_id=request.form['track_id']
-        genre=request.form['genre']
+        track_name=request.form['track_name']
+        track_id = 0
+        genre1=request.form['genre1']
+        genre2=request.form['genre2']
+        genre3=request.form['genre3']
+        lyric=request.form['lyrics']
+
         #Load data
         df = pd.read_csv("./valence_arousal_dataset.csv")
-
-        #Create mood vector
+        
+        # #Create mood vector
         df["mood_vec"] = df[["valence", "energy"]].values.tolist()
 
         sp = authorization.authorize()
+        track_name_result=search_engine(track_name)
+        if len(track_name_result) not in (0,1):
+             track_id = df[df['track_name']==track_name_result]['id'].values[0]
 
         # In order to compute distances between two tracks, we need to transform the seperate valence and energy columns to a mood-vector column. 
         # This can be done by using df.apply() alongside a lambda function
@@ -66,12 +79,22 @@ def track_id():
     
             # Return n recommendations
             return ref_df_sorted.iloc[:n_recs]
-        rec = recommend(track_id=track_id, ref_df= df, sp= sp, n_recs=5)
-        if(genre):
-            rec= df[df['genre']==genre]
-        output= makeObject(rec)
+        if track_id in df['id'].unique():
+            rec = recommend(track_id=track_id, ref_df= df, sp= sp, n_recs=20)
+        else:
+            rec = pd.DataFrame(columns = ['id', 'genre', 'track_name','artist_name','valence','energy','lyric','mood'])
 
-    return render_template('abc.html',output=output)
+        print(rec)
+        list_music = rec.copy()
+        if genre1 in df['genre'].unique() or genre2 in df['genre'].unique() or genre3 in df['genre'].unique():
+            list_music = list_music[list_music['genre'].isin([genre1, genre2, genre3])]
+        if lyric == 'Y' or lyric == 'N':
+            list_music = list_music[list_music['lyric'].isin([lyric])]
+
+        output= makeObject(list_music)
+
+    return render_template('abc.html',output=output, track_name_result=track_name_result)
+
 @app.route("/popularity_recomendation", methods=['GET','POST'])
 def popularity_recomendation():
     output=None
@@ -89,7 +112,9 @@ def makeObject(df):
         item={
             'id':row['id'],
             'artist_name':row['artist_name'],
-            'track_name':[row['track_name']],
+            'track_name':row['track_name'],
+            'genre':row['genre'],
+            'lyric':row['lyric']
         }
         
         objectList.append(item)

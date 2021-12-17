@@ -1,4 +1,5 @@
 import tekore as tk
+import pandas as pd 
 
 def authorize():
     CLIENT_ID = "05bbd92fa9594ef687995e872b11d7a5"

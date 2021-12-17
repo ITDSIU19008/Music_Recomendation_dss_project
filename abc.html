@@ -4,16 +4,31 @@
 <div class="login">
     <div class="form">
         <h2>Input track ID</h2>
-        <form method="post">
+        <form method="POST">
             <div class="form-field">
 
                 <label for="login-mail"><i class="fa fa-user"></i></label>
-                <input id="login-mail" type="text" name="track_id" placeholder="track id">
+                <input id="login-mail" type="text" name="track_name" placeholder="track name">
 
             </div>
             <div class="form-field">
-                <input placeholder="genre" style="border-left: #333342;border-radius: 3px;" type="text" name="genre" list="cityname">
+                <input placeholder="genre1" style="border-left: #333342;border-radius: 3px;" type="text" name="genre1" list="cityname">
                 <datalist id="cityname">
+					</datalist>
+            </div>
+            <div class="form-field">
+                <input placeholder="genre2" style="border-left: #333342;border-radius: 3px;" type="text" name="genre2" list="cityname">
+                <datalist id="cityname">
+					</datalist>
+            </div>
+            <div class="form-field">
+                <input placeholder="genre3" style="border-left: #333342;border-radius: 3px;" type="text" name="genre3" list="cityname">
+                <datalist id="cityname">
+					</datalist>
+            </div>
+            <div class="form-field">
+                <input placeholder="lyrics" style="border-left: #333342;border-radius: 3px;" type="text" name="lyrics" list="lyrics">
+                <datalist id="lyrics">
 					</datalist>
             </div>
 
@@ -23,8 +38,10 @@
         </div>
         <p class="button-text">SUBMIT</p>
       </button>
+        </form>
     </div>
-    </form>
+    
+    
 </div>
 <div class="finished">
     <svg>
@@ -32,16 +49,32 @@
       </svg>
 </div>
 </div>
-<div id='List' style="background-color: #536855;width: 500px;height: 500px;">
+<!-- Đây là chỗ thay đổi cái màu list -->
+<div id='List1' style="background-color: #71a077;width: 500px;height: 500px;"> 
     <p style='align-self:flex-end;'>Here are list that have similar mood recommended for that song: </p>
+    {%if output != None and output != []%}
+        <p style='align-self:flex-end;'>You search a song {{track_name_result}}</p>
+        {%if output|length < 10%}
+            {% for i in range(0,output|length)%}
+            <p style="color:rgb(255, 255, 255);"> Track name: {{output[i]['track_name']}} || Artist name:  {{output[i]['artist_name']}} || Genre: {{output[i]['genre']}}</p>
+            {%endfor%}
+        {%else%}
+            {% for i in range(0,10)%}
+            <p style="color:rgb(255, 255, 255);"> Track name: {{output[i]['track_name']}} || Artist name:  {{output[i]['artist_name']}} || Genre: {{output[i]['genre']}}</p>
+            <br>
+            {%endfor%}
+        {%endif%}
+    {%else%}
+    <p style="color:rgb(255, 255, 255);">Người dùng không tồn tại xin vui lòng chọn lại </p>
+    {%endif%}
 </div>
 
 <!-- //--- ## SVG SYMBOLS ############# -->
-<svg style="display:none;">
+<!-- <svg style="display:none;">
     <symbol id="svg-check" viewBox="0 0 130.2 130.2">
       <polyline points="100.2,40.2 51.5,88.8 29.8,67.5 "/>
     </symbol>
-  </svg>
+  </svg> -->
 
 <script>
     var genre = ['acoustic', 'afrobeat', 'alt-rock', 'alternative', 'ambient',
@@ -68,28 +101,39 @@
         'swedish', 'synth-pop', 'tango', 'techno', 'trance', 'trip-hop',
         'turkish', 'work-out', 'world-music'
     ]
+    var lyrics = ['Y','N']
     genreOpt = document.getElementById("cityname");
     for (var i = 0; i < genre.length; i++) {
         genreOpt.innerHTML += '<option value="' + genre[i] + '">'
     }
-    var data = {{output | safe}};
-    genreOpt2 = document.getElementById("cityname");
-    for (var i = 0; i < genre.length; i++) {
-        genreOpt2.innerHTML += '<option value="' + genre[i] + '">'
-    }
-    var data = {{output | safe}};
 
-    lis = document.getElementById("List");
-    if (data) {
-        for (var i = 0; i < 11; i++) {
-            lis.innerHTML += '<p> Track name:' + data[i].track_name + ' Artist name: ' + data[i].artist + '</p>';
-        }
+    lyricsOpt = document.getElementById("lyrics");
+    for (var j = 0; j < lyrics.length; j++) {
+        lyricsOpt.innerHTML += '<option value="' + lyrics[j] + '">'
     }
+
+    // var data = {{output}};
+
+
+    // // var data = {{output | safe}};
+    // // genreOpt2 = document.getElementById("cityname");
+    // // for (var i = 0; i < genre.length; i++) {
+    // //     genreOpt2.innerHTML += '<option value="' + genre[i] + '">'
+    // // }
+    // // var data = {{output | safe}};
+
+    // lis = document.getElementById("List");
+    // if (data) {
+    //     for (var i = 0; i < 11; i++) {
+    //         lis.innerHTML += '<p> Track name:' + data[i].track_name + ' Artist name: ' + data[i].artist_name + " Genre: " + data[i].genre + '</p>';
+    //     }
+    // }
 </script>
 <style>
     @import url(https://fonts.googleapis.com/css?family=Roboto:400,300);
+    /* Đây là chỗ thay đổi cái màu background phía sau */
     body {
-        background: linear-gradient(135deg, #4d4e63, #333342);
+        background: linear-gradient(135deg, #797979, #8a8a8a);
         height: 100vh;
         font-family: 'Roboto', sans-serif;
         font-size: 16px;
