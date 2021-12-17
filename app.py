@@ -26,11 +26,11 @@ from sklearn.metrics.pairwise import cosine_similarity, linear_kernel
 
 
 
-@app.route("/")
-def main():
-    return "Welcome!"
+# @app.route("/")
+# def main():
+#     return "Welcome!"
     
-@app.route("/track_id", methods=['GET','POST'])
+@app.route("/", methods=['GET','POST'])
 def track_id():
     output=None
     track_name_result = ""
