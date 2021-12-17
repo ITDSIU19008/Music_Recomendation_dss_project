@@ -1,80 +1,106 @@
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
-<div class="login">
-    <div class="form">
-        <h2>Input track ID</h2>
-        <form method="POST">
-            <div class="form-field">
+<div id="Box">
+    <div class="login">
+        <div class="form">
+            <h2>Input track ID</h2>
+            <form method="POST" autocomplete="off">
+                <div class="form-field">
+                    <input id="login-mail" type="text" name="track_name" placeholder="Track name" required>
 
-                <label for="login-mail"><i class="fa fa-user"></i></label>
-                <input id="login-mail" type="text" name="track_name" placeholder="track name">
+                </div>
+                <div class="form-field">
+                    <input placeholder="Genre 1" style="border-left: #333342;border-radius: 3px;" type="text" name="genre1" list="cityname">
+                    <datalist id="cityname">
+                        </datalist>
+                </div>
+                <div class="form-field">
+                    <input placeholder="Genre 2" style="border-left: #333342;border-radius: 3px;" type="text" name="genre2" list="cityname">
+                    <datalist id="cityname">
+                        </datalist>
+                </div>
+                <div class="form-field">
+                    <input placeholder="Genre 3" style="border-left: #333342;border-radius: 3px;" type="text" name="genre3" list="cityname">
+                    <datalist id="cityname">
+                        </datalist>
+                </div>
+                <div class="form-field">
+                    <input placeholder="Lyrics" style="border-left: #333342;border-radius: 3px;" type="text" name="lyrics" list="lyrics">
+                    <datalist id="lyrics">
+                        </datalist>
+                </div>
 
+                <button type="submit" class="button">
+            <div class="arrow-wrapper">
+              <span class="arrow"></span>
             </div>
-            <div class="form-field">
-                <input placeholder="genre1" style="border-left: #333342;border-radius: 3px;" type="text" name="genre1" list="cityname">
-                <datalist id="cityname">
-					</datalist>
-            </div>
-            <div class="form-field">
-                <input placeholder="genre2" style="border-left: #333342;border-radius: 3px;" type="text" name="genre2" list="cityname">
-                <datalist id="cityname">
-					</datalist>
-            </div>
-            <div class="form-field">
-                <input placeholder="genre3" style="border-left: #333342;border-radius: 3px;" type="text" name="genre3" list="cityname">
-                <datalist id="cityname">
-					</datalist>
-            </div>
-            <div class="form-field">
-                <input placeholder="lyrics" style="border-left: #333342;border-radius: 3px;" type="text" name="lyrics" list="lyrics">
-                <datalist id="lyrics">
-					</datalist>
-            </div>
-
-            <button type="submit" class="button">
-        <div class="arrow-wrapper">
-          <span class="arrow"></span>
+            <p class="button-text">SUBMIT</p>
+          </button>
+            </form>
         </div>
-        <p class="button-text">SUBMIT</p>
-      </button>
-        </form>
     </div>
-    
-    
-</div>
-<div class="finished">
-    <svg>
-        <use href="#svg-check" />
-      </svg>
-</div>
-</div>
-<!-- Đây là chỗ thay đổi cái màu list -->
-<div id='List1' style="background-color: #71a077;width: 500px;height: 500px;"> 
-    <p style='align-self:flex-end;'>Here are list that have similar mood recommended for that song: </p>
-    {%if output != None and output != []%}
-        <p style='align-self:flex-end;'>You search a song {{track_name_result}}</p>
-        {%if output|length < 10%}
-            {% for i in range(0,output|length)%}
-            <p style="color:rgb(255, 255, 255);"> Track name: {{output[i]['track_name']}} || Artist name:  {{output[i]['artist_name']}} || Genre: {{output[i]['genre']}}</p>
-            {%endfor%}
-        {%else%}
-            {% for i in range(0,10)%}
-            <p style="color:rgb(255, 255, 255);"> Track name: {{output[i]['track_name']}} || Artist name:  {{output[i]['artist_name']}} || Genre: {{output[i]['genre']}}</p>
-            <br>
-            {%endfor%}
+    <!-- Đây là chỗ thay đổi cái màu list -->
+    <div id='List1'>
+        {%if output1 != None and output1 != []%}
+            <p style="margin-left: 35px; margin-top: 10px; margin-bottom: 0px; padding: 10px">You search: {{track_name_result}}</p>
+            <p style="margin-left: 35px; margin-top: 0px; margin-bottom: 10px; padding: 10px">Here are songs that have similar mood: </p>
+            {%if output1|length < 10%}
+                <table style="width: 550px">
+                    <tr>
+                        <th>Track Name</th>
+                        <th>Artist</th>
+                        <th>Genre</th>
+                    </tr>
+                {% for i in range(0,output1|length)%}
+                    <tr>
+                        <td>{{output1[i]['track_name']}}</td>
+                        <td>{{output1[i]['artist_name']}}</td>
+                        <td>{{output1[i]['genre']}}</td>
+                    </tr>
+                {%endfor%}
+                </table>
+            {%else%}
+                <table>
+                    <tr>
+                        <th>Track Name</th>
+                        <th>Artist</th>
+                        <th>Genre</th>
+                    </tr>
+                    {% for i in range(0,10)%}
+                        <tr>
+                            <td>{{output1[i]['track_name']}}</td>
+                            <td>{{output1[i]['artist_name']}}</td>
+                            <td>{{output1[i]['genre']}}</td>
+                        </tr>
+                    {%endfor%}
+                </table>
+            {%endif%}
         {%endif%}
-    {%else%}
-    <p style="color:rgb(255, 255, 255);">Người dùng không tồn tại xin vui lòng chọn lại </p>
-    {%endif%}
+    </div>
+    <div id='List2'>
+        {%if recom != None and recom != []%}
+            <p style="margin-left: 35px; margin-top: 10px; margin-bottom: 0px; padding: 10px">Most listened songs:</p>
+            <table style="width: 550px">
+                <tr>
+                    <th>Rank</th>
+                    <th>Track Name</th>
+                    <th>Artist</th>
+                    <th>Listen Times</th>
+                </tr>
+                {% for i in range(0,recom|length)%}
+                    <tr>
+                        <td>{{recom[i]['rank']}}</td>
+                        <td>{{recom[i]['track_name']}}</td>
+                        <td>{{recom[i]['artist_name']}}</td>
+                        <td>{{recom[i]['listentime']}}</td>
+                    </tr>
+                {%endfor%}
+            </table>
+        {%endif%}
+    </div>
 </div>
 
-<!-- //--- ## SVG SYMBOLS ############# -->
-<!-- <svg style="display:none;">
-    <symbol id="svg-check" viewBox="0 0 130.2 130.2">
-      <polyline points="100.2,40.2 51.5,88.8 29.8,67.5 "/>
-    </symbol>
-  </svg> -->
 
 <script>
     var genre = ['acoustic', 'afrobeat', 'alt-rock', 'alternative', 'ambient',
@@ -133,14 +159,37 @@
     @import url(https://fonts.googleapis.com/css?family=Roboto:400,300);
     /* Đây là chỗ thay đổi cái màu background phía sau */
     body {
-        background: linear-gradient(135deg, #797979, #8a8a8a);
+        background: linear-gradient(135deg, rgba(2,0,36,1) 0%, rgba(121,9,55,1) 45%, rgba(58,7,7,1) 96%);
         height: 100vh;
+        display: flex;
         font-family: 'Roboto', sans-serif;
         font-size: 16px;
     }
-    
+
+    #List1{
+        border-radius: 12px;
+        background-color: white;
+        width: 600px;
+        height: 650px;
+        position: absolute;
+        top: 50%;
+        left: 20%;
+        transform: translate(-50%, -50%);
+    }
+
+    #List2{
+        border-radius: 12px;
+        background-color: white;
+        width: 600px;
+        height: 650px;
+        position: absolute;
+        top: 50%;
+        left: 80%;
+        transform: translate(-50%, -50%);
+    }
+
     .login {
-        width: 420px;
+        width: 400px;
         background: #fff;
         box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
         border-radius: 12px;
@@ -150,6 +199,7 @@
         left: 50%;
         transform: translate(-50%, -50%);
     }
+
     
     .login:before {
         content: "";
@@ -162,7 +212,11 @@
         z-index: 5;
         transition: all 0.6s ease-in-out, background 0s ease;
     }
-    
+
+    .form{
+        height: 650px;
+    }
+
     .login .form {
         display: block;
         position: relative;
@@ -179,7 +233,20 @@
         color: #9596a2;
         font-size: 19px;
     }
-    
+
+    th{
+        font-size: 20px;
+        padding: 7px;
+        margin: auto;
+        border:1px solid black;
+    }
+
+    table, td {
+        padding: 7px;
+        margin: auto;
+        border:1px solid black;
+    }
+
     .login .form .form-field {
         display: flex;
         align-items: center;
